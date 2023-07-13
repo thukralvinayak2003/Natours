@@ -67,16 +67,10 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(user, 200, res);
 });
 
-exports.logout = (req, res, next) => {
-  res.cookie('JWT', 'loggedOut', {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
-
-  res.status(200).json({
-    status: 'success',
-  });
-  next();
+exports.logout = (req, res) => {
+  //->#2.Express.js Documentation way - clearing the cookie value via built-in express function
+  res.clearCookie('JWT');
+  res.status(200).json({ status: 'success' });
 };
 
 // Only for rendered pages , no errors!
