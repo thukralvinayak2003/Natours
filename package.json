@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "learning express",
   "main": "app.js",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "start": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&nodemon server.js",
