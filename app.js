@@ -12,6 +12,7 @@ const helmet = require('helmet');
 const hpp = require('hpp');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
@@ -111,6 +112,7 @@ app.use(
   })
 );
 
+app.use(compression());
 // app.use((req, res, next) => {
 //   console.log(req.cookies);
 //   next();
