@@ -12047,10 +12047,8 @@ var login = /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          console.log(email, password);
-          _context.prev = 1;
-          console.log(email, password);
-          _context.next = 5;
+          _context.prev = 0;
+          _context.next = 3;
           return (0, _axios.default)({
             method: 'POST',
             url: 'http://127.0.0.1:3000/api/v1/users/login',
@@ -12059,7 +12057,7 @@ var login = /*#__PURE__*/function () {
               password: password
             }
           });
-        case 5:
+        case 3:
           res = _context.sent;
           if (res.data.status === 'success') {
             (0, _alert.showAlert)('success', 'Successfully logged in');
@@ -12067,17 +12065,17 @@ var login = /*#__PURE__*/function () {
               location.assign('/');
             }, 1500);
           }
-          _context.next = 12;
+          _context.next = 10;
           break;
-        case 9:
-          _context.prev = 9;
-          _context.t0 = _context["catch"](1);
+        case 7:
+          _context.prev = 7;
+          _context.t0 = _context["catch"](0);
           (0, _alert.showAlert)('error', _context.t0.response.data.message);
-        case 12:
+        case 10:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[1, 9]]);
+    }, _callee, null, [[0, 7]]);
   }));
   return function login(_x, _x2) {
     return _ref.apply(this, arguments);
@@ -12138,30 +12136,36 @@ var updateSettings = /*#__PURE__*/function () {
         case 0:
           _context.prev = 0;
           url = type === 'password' ? 'http://127.0.0.1:3000/api/v1/users/updateMyPassword/' : 'http://127.0.0.1:3000/api/v1/users/updateMe/';
-          console.log(url);
-          _context.next = 5;
+          _context.next = 4;
           return (0, _axios.default)({
             method: 'PATCH',
             url: url,
             data: data
           });
-        case 5:
+        case 4:
           res = _context.sent;
-          console.log(res);
-          if (res.data.status === 'success') {
-            (0, _alert.showAlert)('success', "".concat(type.toUpperCase(), " Successfully updated"));
+          if (!(res.data.status === 'success')) {
+            _context.next = 9;
+            break;
           }
-          _context.next = 13;
+          (0, _alert.showAlert)('success', "".concat(type.toUpperCase(), " updated successfully!"));
+          if (!(type === 'photo')) {
+            _context.next = 9;
+            break;
+          }
+          return _context.abrupt("return", res.data.data.user.photo);
+        case 9:
+          _context.next = 14;
           break;
-        case 10:
-          _context.prev = 10;
+        case 11:
+          _context.prev = 11;
           _context.t0 = _context["catch"](0);
           (0, _alert.showAlert)('error', _context.t0.response.data.message);
-        case 13:
+        case 14:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 10]]);
+    }, _callee, null, [[0, 11]]);
   }));
   return function updateSettings(_x, _x2) {
     return _ref.apply(this, arguments);
@@ -12203,25 +12207,23 @@ var bookTour = (0, _catchAsync.default)( /*#__PURE__*/function () {
           return (0, _axios.default)("http://127.0.0.1:3000/api/v1/booking/checkout-session/".concat(tourId));
         case 4:
           session = _context.sent;
-          console.log(session);
-          // Create a checkout form + charge credit card
-          _context.next = 8;
+          _context.next = 7;
           return stripe.redirectToCheckout({
             sessionId: session.data.session.id
           });
-        case 8:
-          _context.next = 14;
+        case 7:
+          _context.next = 13;
           break;
-        case 10:
-          _context.prev = 10;
+        case 9:
+          _context.prev = 9;
           _context.t0 = _context["catch"](0);
           console.log(_context.t0);
           (0, _alert.showAlert)('error', _context.t0);
-        case 14:
+        case 13:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 10]]);
+    }, _callee, null, [[0, 9]]);
   }));
   return function (_x) {
     return _ref.apply(this, arguments);
@@ -12460,46 +12462,38 @@ if (userDataForm) {
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
-    console.log(form);
     (0, _updateSettings.updateSettings)(form, 'data'); //updateSettings will read form as an object
   });
 }
 
-var userPhotoCurrent = document.querySelector('.form__user-photo'); // photo near the upload link
-var userPhotoIconCurrent = document.querySelector('.nav__user-img'); //icon photo @ the right top corner
-
-if (userDataForm) {
-  userDataForm.addEventListener('submit', /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-      var form, userUploadedFile;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            event.preventDefault();
-            form = new FormData();
-            form.append('name', document.getElementById('name').value);
-            form.append('email', document.getElementById('email').value);
-            form.append('photo', document.getElementById('photo').files[0]);
-            _context.next = 7;
-            return (0, _updateSettings.updateSettings)(form, 'data');
-          case 7:
-            userUploadedFile = form.get('photo');
-            if (userUploadedFile.type === 'image/jpeg') {
-              userPhotoCurrent.setAttribute('src', "img/users/".concat(userUploadedFile.name));
-              userPhotoIconCurrent.setAttribute('src', "img/users/".concat(userUploadedFile.name));
-              console.log('👛', userUploadedFile, 'You have changed your picture');
-            }
-          case 9:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    }));
-    return function (_x) {
-      return _ref.apply(this, arguments);
-    };
-  }());
-}
+if (userDataForm) userDataForm.addEventListener('submit', /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {
+    var form;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          e.preventDefault();
+          document.querySelector('.btn--save-settings').textContent = 'Updating...';
+          form = new FormData();
+          form.append('name', document.getElementById('name').value);
+          form.append('email', document.getElementById('email').value);
+          form.append('photo', document.getElementById('photo').files[0]);
+          console.log(form);
+          _context.next = 9;
+          return (0, _updateSettings.updateSettings)(form, 'data');
+        case 9:
+          document.querySelector('.btn--save-settings').textContent = 'Save settings';
+          location.reload();
+        case 11:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+  return function (_x) {
+    return _ref.apply(this, arguments);
+  };
+}());
 if (bookBtn) {
   bookBtn.addEventListener('click', function (e) {
     e.target.textContent = 'Processing...'; // It changes the text content in the #book-tour

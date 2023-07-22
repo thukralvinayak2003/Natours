@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import '@babel/polyfill';
 import { displayMap } from './leaflet';
 import { login, logout } from './login';
@@ -43,41 +42,26 @@ if (userDataForm) {
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
 
-    console.log(form);
     updateSettings(form, 'data'); //updateSettings will read form as an object
   });
 }
 
-const userPhotoCurrent = document.querySelector('.form__user-photo'); // photo near the upload link
-const userPhotoIconCurrent = document.querySelector('.nav__user-img'); //icon photo @ the right top corner
-
-if (userDataForm) {
-  userDataForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-
+if (userDataForm)
+  userDataForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.querySelector('.btn--save-settings').textContent = 'Updating...';
     const form = new FormData();
-
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]);
-
+    console.log(form);
     await updateSettings(form, 'data');
 
-    const userUploadedFile = form.get('photo');
+    document.querySelector('.btn--save-settings').textContent = 'Save settings';
 
-    if (userUploadedFile.type === 'image/jpeg') {
-      userPhotoCurrent.setAttribute(
-        'src',
-        `img/users/${userUploadedFile.name}`
-      );
-      userPhotoIconCurrent.setAttribute(
-        'src',
-        `img/users/${userUploadedFile.name}`
-      );
-      console.log('👛', userUploadedFile, 'You have changed your picture');
-    }
+    location.reload();
   });
-}
+
 if (bookBtn) {
   bookBtn.addEventListener('click', (e) => {
     e.target.textContent = 'Processing...'; // It changes the text content in the #book-tour

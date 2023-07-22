@@ -93,7 +93,6 @@ userSchema.methods.createPasswordResetToken = function () {
     .digest('hex'); // sha256 is name of the encryption algorithm update will encrypt the reset token and digest ('hex') will store it as a hexadecimal string
   this.passwordResetTokenExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-  console.log({ resetToken }, this.passwordResetToken);
   return resetToken; // we will send email the encrypted reset token
 };
 
