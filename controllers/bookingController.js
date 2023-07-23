@@ -94,7 +94,7 @@ exports.webhookCheckout = (req, res, next) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (error) {
-    return res.status(400).send(error.message);
+    return res.status(400).send(`WebHook Error : ${error.message}`);
   }
 
   if (event.type === 'checkout.session.completed')
