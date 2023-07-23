@@ -83,7 +83,7 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.webhookCheckout = (req, res, next) => {
+exports.webhookCheckout = async (req, res, next) => {
   // when stripe calls our webhook it will add header to the req containing a special signature for our webhook
   const signature = req.headers['stripe-signature'];
   let event;
@@ -98,7 +98,7 @@ exports.webhookCheckout = (req, res, next) => {
   }
 
   if (event.type === 'checkout.session.completed')
-    createBookingCheckout(event.data.object);
+    await createBookingCheckout(event.data.object);
   res.status(200).json({ received: true });
 };
 
