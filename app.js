@@ -44,12 +44,10 @@ const styleSrcUrls = [
 const connectSrcUrls = ['https://unpkg.com', 'https://tile.openstreetmap.org'];
 const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
-app.use(
-  cors({
-    origin: 'http:/127.0.0.1:3000',
-    credentials: true,
-  })
-);
+app.use(cors());
+
+app.options('*', cors()); // when there is a patch , delete , put or any other request the browser will create options request first to check if the request is safe this is pre-flight phase here app.options is a http request and '*' is that for all routes run cors() that is all routes can to a cross-origin request
+
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
