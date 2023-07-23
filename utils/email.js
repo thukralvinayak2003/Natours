@@ -15,7 +15,9 @@ module.exports = class Email {
   newTransport() {
     if (process.env.NODE_ENV === 'production') {
       //Send GRID
-      return 1;
+      return nodemailer.createTransport(
+        new Transport({ apiKey: `${process.env.API_KEY}` })
+      );
     }
     return nodemailer.createTransport(
       new Transport({ apiKey: `${process.env.API_KEY}` })
