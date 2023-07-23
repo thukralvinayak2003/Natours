@@ -23,7 +23,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   const price = await stripe.prices.create({
     product: product.id,
-    unit_amount: tour.price * 100,
+    unit_amount: tour.price * 1000,
     currency: 'inr',
   });
 
@@ -66,7 +66,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
   const user = await User.findOne({ email: session.customer_email }).id; //get the userId
-  const { price } = session.line_items[0];
+  const { price } = session.amount_total;
   await Booking.create({ tour, user, price });
 };
 
