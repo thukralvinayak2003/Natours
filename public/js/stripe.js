@@ -5,7 +5,7 @@ import catchAsync from '../../utils/catchAsync';
 
 export const bookTour = catchAsync(async (tourId) => {
   try {
-    const stripe = Stripe(
+    const stripe = stripe(
       'pk_test_51NSPNeSFIoG9GF9fkCSXUT5lVEIYl8LDxM840urB90FLABZWLp5hXRO3s2sZB9ZiFUSc1ODLsCx8X4up4WIWBewa00vBw9GANj'
     );
     //1 Get checkout session from API
