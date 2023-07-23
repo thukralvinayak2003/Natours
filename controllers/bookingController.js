@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const Stripe = require('stripe');
+const stripe = require('stripe');
 const Tour = require('../models/tourModel');
 
 const catchAsync = require('../utils/catchAsync');
@@ -8,12 +8,12 @@ const Booking = require('../models/bookingModel');
 const User = require('../models/userModel');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
-  const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+  const Stripe = stripe(process.env.STRIPE_SECRET_KEY);
   //GET the currently booked tour
   const tour = await Tour.findById(req.params.tourId);
 
   //Create checkout
-  const product = await stripe.products.create({
+  const product = await Stripe.products.create({
     name: `${tour.name} Tour`,
     description: tour.summary,
     images: [
@@ -66,7 +66,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
   const user = await User.findOne({ email: session.customer_email }).id; //get the userId
-  const price = session.amount_total;
+  const price = session.amount_total / 1000;
   await Booking.create({ tour, user, price });
 };
 
@@ -88,7 +88,7 @@ exports.webhookCheckout = (req, res, next) => {
   const signature = req.headers['stripe-signature'];
   let event;
   try {
-    event = Stripe.webhooks.constructEvent(
+    event = stripe.webhooks.constructEvent(
       req.body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
