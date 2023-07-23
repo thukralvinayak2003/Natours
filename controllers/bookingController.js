@@ -85,7 +85,7 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
 
 exports.webhookCheckout = (req, res, next) => {
   // when stripe calls our webhook it will add header to the req containing a special signature for our webhook
-  const signature = req.headers('stripe-signature');
+  const signature = req.headers['stripe-signature'];
   let event;
   try {
     event = Stripe.webhooks.constructEvent(
