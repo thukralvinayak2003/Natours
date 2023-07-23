@@ -74,7 +74,8 @@ const sendErrorProd = (err, req, res) => {
   // 2) Send generic message
   return res.status(err.statusCode).render('error', {
     title: 'Something went wrong!',
-    msg: 'Please try again later.',
+    // msg: 'Please try again later.',
+    msg: err.message,
   });
 };
 module.exports = (err, req, res, next) => {
