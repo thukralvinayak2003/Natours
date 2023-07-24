@@ -89,6 +89,13 @@ if (process.env.NODE_ENV !== 'development') {
 //   )
 // ); //the data in the body shouldn't in be json ,it should be string that's why we need to use it raw not in bookingRouter
 
+//How many request per IP should be allowed
+const limiter = rateLimit({
+  max: 100, //there  can be 100 requests
+  windowMS: 6 * 60 * 1000, // per hour
+  message: 'Too many requests from this IP . Please try again later',
+});
+
 // app.use(express.json()); // MIDDLEWARE to use body-parser ,reading data from body to req.body
 // Use JSON parser for all non-webhook routes
 app.use((req, res, next) => {
@@ -104,13 +111,6 @@ app.post(
   bookingController.webhookCheckout
 );
 app.use(cookieParser()); //parses the data from the cookie
-
-//How many request per IP should be allowed
-const limiter = rateLimit({
-  max: 100, //there  can be 100 requests
-  windowMS: 6 * 60 * 1000, // per hour
-  message: 'Too many requests from this IP . Please try again later',
-});
 
 app.use('/api', limiter); // apply the limiter on the api route
 
