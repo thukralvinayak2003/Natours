@@ -93,11 +93,7 @@ app.use((req, res, next) => {
     // Use JSON parser for all non-webhook routes
   }
 });
-app.post(
-  '/webhook',
-  express.raw({ type: 'application/json' }),
-  (req, res) => {}
-);
+
 app.use(cookieParser()); //parses the data from the cookie
 
 //How many request per IP should be allowed
