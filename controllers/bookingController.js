@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { buffer } = require('micro');
+// const { buffer } = require('micro');
 const Stripe = require('stripe');
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
