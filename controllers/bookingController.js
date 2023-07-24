@@ -1,4 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
+const { buffer } = require('micro');
 const Stripe = require('stripe');
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
@@ -121,14 +122,15 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.webhookCheckout = (req, res, next) => {
+exports.webhookCheckout = async (req, res, next) => {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
   const sig = req.headers['stripe-signature'];
+  const reqBuffer = await buffer(req);
   let event;
   try {
     event = stripe.webhooks.constructEvent(
-      req.body,
+      reqBuffer,
       sig,
       process.env.WEBHOOK_SECRET
     );
