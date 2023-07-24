@@ -124,13 +124,11 @@ exports.getMyTours = catchAsync(async (req, res, next) => {
 
 exports.webhookCheckout = async (req, res, next) => {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
   const sig = req.headers['stripe-signature'];
-  const reqBuffer = await buffer(req);
   let event;
   try {
     event = stripe.webhooks.constructEvent(
-      reqBuffer,
+      req.body,
       sig,
       process.env.WEBHOOK_SECRET
     );

@@ -81,7 +81,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 app.post(
   '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
+  express.raw({ type: '*/*' }),
   bookingController.webhookCheckout
 ); //the data in the body shouldn't in be json ,it should be string that's why we need to use it raw not in bookingRouter
 
