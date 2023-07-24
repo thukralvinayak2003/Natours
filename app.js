@@ -23,6 +23,8 @@ const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const bookingController = require('./controllers/bookingController');
 
+app.enable('trust proxy');
+
 //SETUP PUG ENGINE
 app.set('view engine', 'pug'); // here we are saying we are using pug as a template engine for express
 //pug templates are called views in express // we are using model views controllers (mvc) architecture
