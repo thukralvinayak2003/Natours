@@ -79,21 +79,28 @@ if (process.env.NODE_ENV !== 'development') {
   app.use(morgan('dev')); // logging details
 }
 
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  bookingController.webhookCheckout
-); //the data in the body shouldn't in be json ,it should be string that's why we need to use it raw not in bookingRouter
+// app.post(
+//   app.post(
+//     '/webhook-checkout',
+//     express.json({ type: 'application/json' }),
+//     bookingController.webhookCheckout
+//   )
+// ); //the data in the body shouldn't in be json ,it should be string that's why we need to use it raw not in bookingRouter
 
+// app.use(express.json()); // MIDDLEWARE to use body-parser ,reading data from body to req.body
+// Use JSON parser for all non-webhook routes
 app.use((req, res, next) => {
   if (req.originalUrl === '/webhook-checkout') {
     next();
   } else {
-    express.json()(req, res, next); // MIDDLEWARE to use body-parser ,reading data from body to req.body
-    // Use JSON parser for all non-webhook routes
+    express.json()(req, res, next); // or bodyParser.json() in your case
   }
 });
-
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 app.use(cookieParser()); //parses the data from the cookie
 
 //How many request per IP should be allowed
