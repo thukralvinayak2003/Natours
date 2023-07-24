@@ -23,8 +23,6 @@ const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const bookingController = require('./controllers/bookingController');
 
-app.enable('trust proxy');
-
 //SETUP PUG ENGINE
 app.set('view engine', 'pug'); // here we are saying we are using pug as a template engine for express
 //pug templates are called views in express // we are using model views controllers (mvc) architecture
@@ -81,13 +79,14 @@ if (process.env.NODE_ENV !== 'development') {
   app.use(morgan('dev')); // logging details
 }
 
-// app.post(
-//   app.post(
-//     '/webhook-checkout',
-//     express.json({ type: 'application/json' }),
-//     bookingController.webhookCheckout
-//   )
-// ); //the data in the body shouldn't in be json ,it should be string that's why we need to use it raw not in bookingRouter
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+); //the data in the body shouldn't in be json ,it should be string that's why we need to use it raw not in bookingRouter
+
+app.use(express.json()); // MIDDLEWARE to use body-parser ,reading data from body to req.body
+app.use(cookieParser()); //parses the data from the cookie
 
 //How many request per IP should be allowed
 const limiter = rateLimit({
@@ -95,22 +94,6 @@ const limiter = rateLimit({
   windowMS: 6 * 60 * 1000, // per hour
   message: 'Too many requests from this IP . Please try again later',
 });
-
-// app.use(express.json()); // MIDDLEWARE to use body-parser ,reading data from body to req.body
-// Use JSON parser for all non-webhook routes
-app.use((req, res, next) => {
-  if (req.originalUrl === '/webhook-checkout') {
-    next();
-  } else {
-    express.json()(req, res, next); // or bodyParser.json() in your case
-  }
-});
-app.post(
-  '/webhook-checkout',
-  express.raw({ type: 'application/json' }),
-  bookingController.webhookCheckout
-);
-app.use(cookieParser()); //parses the data from the cookie
 
 app.use('/api', limiter); // apply the limiter on the api route
 
