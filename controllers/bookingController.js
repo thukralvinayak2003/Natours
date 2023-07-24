@@ -133,7 +133,7 @@ exports.webhookCheckout = async (req, res, next) => {
       process.env.WEBHOOK_SECRET
     );
   } catch (err) {
-    return res.status(400).send(`Webhook Error ${err.message}`);
+    return res.status(400).send(`Webhook Error ${err.message} and ${req.body}`);
   }
 
   if (event.type === 'checkout.session.completed')
