@@ -3,7 +3,7 @@ const { buffer } = require('micro');
 const Stripe = require('stripe');
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
+// const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 const Booking = require('../models/bookingModel');
 const User = require('../models/userModel');
@@ -66,28 +66,25 @@ const User = require('../models/userModel');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
+  //GET the currently booked tour
   const tour = await Tour.findById(req.params.tourId);
 
-  if (!tour) return next(new AppError('Tour not found!', 404));
-
-  // create a checkout session
   const session = await stripe.checkout.sessions.create({
-    mode: 'payment',
     payment_method_types: ['card'],
     success_url: `${req.protocol}://${req.get('host')}/my-tours`,
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
+    mode: 'payment',
     line_items: [
       {
-        description: `${tour.summary}`,
+        quantity: 1,
         price_data: {
-          unit_amount: tour.price * 100,
-          currency: 'usd',
+          currency: 'inr',
+          unit_amount: tour.price * 1000,
           product_data: {
-            name: tour.name,
-            description: `${tour.summary}`,
+            name: `${tour.name} Tour`,
+            description: tour.summary,
             images: [
               `${req.protocol}://${req.get('host')}/img/tours/${
                 tour.imageCover
@@ -95,11 +92,10 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
             ],
           },
         },
-        quantity: 1,
       },
     ],
   });
-  // res.redirect(303, session.url); // Ignore this, only for front-end implementation via form action
+  //Create session as response
   res.status(200).json({
     status: 'success',
     session,
@@ -130,11 +126,11 @@ exports.webhookCheckout = async (req, res, next) => {
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
   const sig = req.headers['stripe-signature'];
-  // const reqBuffer = await buffer(req);
+  const reqBuffer = await buffer(req);
   let event;
   try {
     event = stripe.webhooks.constructEvent(
-      req.body,
+      reqBuffer,
       sig,
       process.env.WEBHOOK_SECRET
     );
