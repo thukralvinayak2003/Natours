@@ -26,10 +26,11 @@ const bookingSchema = new mongoose.Schema({
 });
 
 bookingSchema.pre(/^find/, function (next) {
+  //this is the current document
   this.populate('user').populate({
     path: 'tour',
     select: 'name',
-  }); //this is the current document
+  });
   next();
 });
 
