@@ -24,6 +24,7 @@ const bookingRouter = require('./routes/bookingRoutes');
 const bookingController = require('./controllers/bookingController');
 
 //SETUP PUG ENGINE
+
 app.set('view engine', 'pug'); // here we are saying we are using pug as a template engine for express
 //pug templates are called views in express // we are using model views controllers (mvc) architecture
 app.set('views', path.join(__dirname, 'views')); // this will create a path with directory name and views
@@ -47,7 +48,7 @@ const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 app.use(cors());
 
-app.options('*', cors()); // when there is a patch , delete , put or any other request the browser will create options request first to check if the request is safe this is pre-flight phase here app.options is a http request and '*' is that for all routes run cors() that is all routes can to a cross-origin request
+app.options('*', cors()); // when there is a patch , delete , put or any other request the browser will create options request first to check if the request is safe this is pre-flight phase here app.options is a http request and '*' is that for all routes run cors() that is all routes can do a cross-origin request
 
 app.use(
   helmet.contentSecurityPolicy({
